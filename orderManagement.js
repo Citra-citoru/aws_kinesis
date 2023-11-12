@@ -23,7 +23,7 @@ module.export.createOrder = body => {
 
 module.export.placeNewOrder = order => {
     return saveNewOrder(order).then((order) => {
-        placeOrderStream(order);
+        return placeOrderStream(order);
     });
 }
 

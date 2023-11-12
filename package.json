@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "serverless-pseudo-parameters": "^2.6.1",
     "uuid": "^9.0.1"
   }
 }

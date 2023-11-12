@@ -1,15 +1,21 @@
 'use strict';
 
-module.exports.createOrder = async (event) => {
+const orderManagement = require('./orderManagement');
+
+const createResponse = (statusCode, message) => {
   return {
-    statusCode: 201,
-    body: JSON.stringify(
-      {
-        message: 'Order created!',
-        input: event,
-      },
-      null,
-      2
-    ),
-  };
+    statusCode: statusCode,
+    body: JSON.stringify(message)
+  }
+}
+module.exports.createOrder = async (event) => {
+
+  const body = JSON.parse(event.body);
+  const order = orderManagement.createOrder(body);
+
+  return orderManagement.placeNewOrder(order).then(() => {
+    return createResponse(200, "Order Created!");
+  }).catch((error)=>{
+    return createResponse(400, error);
+  })
 };

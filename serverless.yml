@@ -1,9 +1,24 @@
 service: cake-ordering-system
-frameworkVersion: "3"
+
+plugins: 
+  - serverless-pseudo-parameters
 
 provider:
   name: aws
   runtime: nodejs18.x
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:PutItem
+        - dynamodb:GetItem
+      Resource:
+        - arn:aws:dynamodb:#{AWS::Region}:#{AWS::AccountId}:table/ordersTable
+    - Effect: Allow
+      Action:
+        - kinesis:PutRecord
+      Resource:
+        - arn:aws:kinesis:#{AWS::Region}:#{AWS::AccountId}:stream/order-events
 
 functions:
   createOrder:
@@ -17,7 +32,7 @@ functions:
       orderStreamName: order-events
 
 resources:
-  resources: 
+  Resources: 
     orderEventsStream:
       Type: AWS::Kinesis::Stream
       Properties:
@@ -32,5 +47,5 @@ resources:
             AttributeType: "S"
         KeySchema:
           - AttributeName: "orderId"
-          KeyType: "HASH"
+            KeyType: "HASH"
         BillingMode: PAY_PER_REQUEST
