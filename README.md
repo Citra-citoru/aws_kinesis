@@ -1,7 +1,7 @@
 # Cake Ordering System
 
 ## Description
-Cake Ordering System is a Backend as a Service (BAAS) built using NodeJS, aws cloud formation, aws kinesis, aws dynamodb.
+Cake Ordering System is a Data Driven Serverless Application using Backend as a Service (BAAS) by AWS. Application built using NodeJS, aws cloud formation, aws lambda, aws kinesis, aws dynamodb.
 
 ## How To Install
 ```bash
