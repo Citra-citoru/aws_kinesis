@@ -5,25 +5,25 @@ Cake Ordering System is a Backend as a Service (BAAS) built using NodeJS, aws cl
 
 ## How To Install
 ```bash
-  $npm i
+  $ npm i
 ```
 ## How to Start (Dev)
 ```bash
-  $npm start
+  $ npm start
 ```
 ## Deploy to AWS
 1. Set up the Serverless CLI
 
 ```bash
-  $npm i -g serverless
+  $ npm i -g serverless
 ```
 
 2. Setup Crendential
 ```bash
-  $serverless config credentials --provider aws --key <your key> --secret <your secret>
+  $ serverless config credentials --provider aws --key <your key> --secret <your secret>
 ```
 
 3. Deploy
-```
-  $serverless deploy
+```bash
+  $ serverless deploy
 ```
