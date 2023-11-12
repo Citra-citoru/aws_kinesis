@@ -1,6 +1,6 @@
 "use strict";
 
-const orderManagement = require("./order-management");
+const orderManagement = require("./order-manager");
 const kinesisHelper = require("./kinesis-helper");
 const cakeProducerManager = require("./cake-producer-manager");
 const deliveryManager = require("./delivery-manager");
@@ -67,6 +67,11 @@ module.exports.notifyExternalParties = async (event) => {
       return error;
     });
 };
+
+module.exports.notifyDeliveryCompany = async (event) =>{
+  console.log('delivery company endpoint');
+  return 'done';
+}
 
 function getCakeProducerPromise(records) {
   const ordersPlaced = records.filter((r) => r.eventType === "order_placed");

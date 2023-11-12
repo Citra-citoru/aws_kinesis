@@ -21,7 +21,7 @@ module.export.createOrder = body => {
 }
 
 module.export.placeNewOrder = order => {
-    return saveOrder(order).then((order) => {
+    return this.saveOrder(order).then((order) => {
         return placeOrderStream(order);
     });
 }
@@ -35,7 +35,14 @@ module.exports.fulfillOrder = (orderId, fulfillmentId) => {
     })
 }
 
-function saveOrder(order) {
+module.exports.updateOrderForDelivery = orderId => {
+    return getOrder(orderId).then(order =>{
+        order.sentToDeliveryDate = Date.now();
+        return order;
+    })
+} 
+
+module.exports.saveOrder = order => {
     const params = {
         TableName: TABLE_NAME,
         Item: order
