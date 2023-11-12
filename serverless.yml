@@ -30,6 +30,13 @@ functions:
     environment:
       orderTableName: ordersTable
       orderStreamName: order-events
+  orderFulfillment:
+    handler: handler.orderFulfillment
+    events: 
+      - http:
+          path: /order/fulfillment
+          method: post
+
 
 resources:
   Resources: 
