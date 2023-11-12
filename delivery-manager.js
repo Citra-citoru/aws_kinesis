@@ -19,6 +19,12 @@ module.exports.deliveryOrder = ordersFulfilled => {
     return Promise.all(orderFulfilledPromises) ;
 }
 
+module.exports.orderDelivered = (orderId, deliveryCompanyId, orderReview) => {
+    return orderManager. update0rderAfterDelivery (orderId, deliveryCompanyId). then( updatedOrder => {
+      return customerServiceManager.notifyCustomerServiceForeview(orderId,orderReview);
+    });
+}
+
 function notifyDeliveryCompany(order) {
     const params = {
       MessageBody: JSON.stringify(order), 

@@ -70,8 +70,30 @@ functions:
       events: 
         - sqs:
             arn:
-              Fn::GetAtt:
+              Fn::GetAtt
                 - deliveryServiceQueue
+                - Arn
+            batchSize: 1
+    orderDelivered:
+      handler: handler.orderDelivered
+      events: 
+        - http:
+          path: /order/delivered
+          method: post
+      environment:
+        region: ${self:provider.region}
+        orderTableName: ordersTable
+        customerServiceQueue:
+          ref: customerServiceQueue
+    notifyCustomerService:
+      handler: handler.notifyCustomerService
+      events: 
+        - sqs:
+            arn:
+              Fn::GetAtt
+                - customerServiceQueue
+                - Arn
+            batchSize: 1
 
 resources:
   Resources: 
