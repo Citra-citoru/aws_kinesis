@@ -1,8 +1,9 @@
-'use strict';
+"use strict";
 
-const orderManagement = require('./order-management');
-const kinesisHelper = require('./kinesis-helper');
-const cakeProducerManager = require('./cake-producer-manager');
+const orderManagement = require("./order-management");
+const kinesisHelper = require("./kinesis-helper");
+const cakeProducerManager = require("./cake-producer-manager");
+const deliveryManager = require("./delivery-manager");
 
 const createResponse = (statusCode, message) => {
   return {
@@ -10,8 +11,8 @@ const createResponse = (statusCode, message) => {
     body: JSON.stringify(message)
   }
 }
-module.exports.createOrder = async (event) => {
 
+module.exports.createOrder = async (event) => {
   const body = JSON.parse(event.body);
   const order = orderManagement.createOrder(body);
 
@@ -34,17 +35,55 @@ module.exports.orderFulfillment = async(event) => {
   })
 }
 
-module.exports.notifyCakeProducer = async(event) => {
+module.exports.notifyCakeProducer = async (event) => {
   const data = kinesisHelper.getRecords(event);
-  const ordersPlaced = records.filter(r => r.eventType == 'order_placed');
+  const ordersPlaced = records.filter((r) => r.eventType == "order_placed");
 
-  if (ordersPlaced <= 0)
-  {
-    return 'There is no data';
+  if (ordersPlaced <= 0) {
+    return "There is no data";
   }
-  cakeProducerManager.handlePlaceOrders(ordersPlaced).then(()=>{
-    return 'everything went well';
-  }).catch(error => {
-    return error;
-  })
+  cakeProducerManager
+    .handlePlaceOrders(ordersPlaced)
+    .then(() => {
+      return "everything went well";
+    })
+    .catch((error) => {
+      return error;
+    });
+};
+
+module.exports.notifyExternalParties = async (event) => {
+  const data = kinesisHelper.getRecords(event);
+  const ordersPlaced = records.filter((r) => r.eventType == "order_placed");
+
+  const cakeProducerPromise = getCakeProducerPromise(records);
+  const deliveryPromise = getDeliveryPromise(records);
+  
+
+  return Promise.all([cakeProducerPromise, deliveryPromise]).then(() => {
+      return "everything went well";
+    })
+    .catch((error) => {
+      return error;
+    });
+};
+
+function getCakeProducerPromise(records) {
+  const ordersPlaced = records.filter((r) => r.eventType === "order_placed");
+  if (ordersPlaced.length > 0) {
+    return cakeProducerManager.handlePlaced0rders(ordersPlaced);
+  } else {
+    return null;
+  }
+}
+
+function getDeliveryPromise(records) {
+  const orderFulfilled = records.filter(
+    (r) => r.eventType === "order fulfilled"
+  );
+  if (orderFulfilled.length > 0) {
+    return deliveryManager.deliveryOrder(orderFulfilled);
+  } else {
+    return null;
+  }
 }
