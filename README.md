@@ -29,4 +29,5 @@ Cake Ordering System is a Data Driven Serverless Application using Backend as a 
 ```
 4. Check error log
 ```bash
+  $ serverless logs -f <event name>
 ```
