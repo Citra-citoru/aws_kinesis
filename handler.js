@@ -17,7 +17,7 @@ module.exports.createOrder = async (event) => {
   const order = orderManagement.createOrder(body);
 
   return orderManagement.placeNewOrder(order).then(() => {
-    return createResponse(200, "Order Created!");
+    return createResponse(201, "Order Created!");
   }).catch((error)=>{
     return createResponse(400, error);
   })
